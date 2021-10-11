@@ -8,6 +8,7 @@
 package edu.neu.coe.info6205.union_find;
 
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * Height-weighted Quick Union with Path Compression
@@ -82,6 +83,15 @@ public class UF_HWQUPC implements UF {
         validate(p);
         int root = p;
         // TO BE IMPLEMENTED
+
+        while (root != parent[root])
+        {
+
+            if (this.pathCompression)
+                doPathCompression(root);
+
+            root = parent[root];
+        }
         return root;
     }
 
@@ -169,6 +179,22 @@ public class UF_HWQUPC implements UF {
 
     private void mergeComponents(int i, int j) {
         // TO BE IMPLEMENTED make shorter root point to taller one
+
+        int iValue = find(i);
+        int jValue = find(j);
+
+        if(iValue == jValue) {
+            return;
+        }
+        if(height[iValue]<height[jValue]) {
+            height[jValue] += height[iValue];
+            updateParent(iValue, jValue);
+        }else
+        {
+            height[iValue]+=height[jValue];
+            updateParent(jValue,iValue);
+        }
+
     }
 
     /**
@@ -176,5 +202,43 @@ public class UF_HWQUPC implements UF {
      */
     private void doPathCompression(int i) {
         // TO BE IMPLEMENTED update parent to value of grandparent
+        parent[i] = parent[parent[i]];
     }
+
+    public static int count(UF_HWQUPC uf,int n){
+
+        Random r = new Random();
+        int answer = 0;
+        while(uf.count > 1){
+            int a=r.nextInt(n);
+            int b=r.nextInt(n);
+
+            if(!uf.connected(a,b)) {
+                uf.union(a,b);
+
+            }
+
+            answer++;
+
+        }
+
+        return answer;
+    }
+
+    public static void main(String[] args){
+
+        int times = 15;
+        int average = 0;
+
+        for(int i = 5; i <= 100; i= i+5) {
+            int sum = 0;
+            for(int j = 0; j < times; j++) {
+                UF_HWQUPC uf = new UF_HWQUPC(i);
+                sum += count(uf, i);
+            }
+            average = sum/times;
+            System.out.println("for n = " + i + " the number of connected pairs is = " + average );
+        }
+    }
+
 }
