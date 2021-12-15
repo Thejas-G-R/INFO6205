@@ -7,3 +7,8 @@ Assignment 2 NOTE :
 
 Assignment 5 NOTE:
 1. Main and ParSort Files have been modified.
+
+
+
+Pell Numbers: Found in FinalCodeTest file
+
